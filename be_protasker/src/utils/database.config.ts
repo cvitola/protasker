@@ -10,8 +10,9 @@ export const Configuration = (configService: ConfigService): TypeOrmModuleOption
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_NAME'),
     entities: [join(process.cwd(), 'dist/**/*.entity.js')],
+    migrations: [join(process.cwd(), 'dist/migrations/*.js')], //migraciones
     // do NOT use synchronize: true in real projects
-    synchronize: true,
+    synchronize: false,
     ssl :{
         rejectUnauthorized: false, // Establece esto si estás usando un certificado auto-firmado
       },

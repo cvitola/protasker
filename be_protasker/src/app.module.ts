@@ -3,6 +3,7 @@ import { TypeOrmModule} from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Configuration } from './utils/database.config';
 import { UsersModule } from './users/users.module';
+import { BoardModule } from './board/board.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UsersModule } from './users/users.module';
       useFactory: (configService: ConfigService) => Configuration(configService),
     }),
     UsersModule,
+    BoardModule,
     ],
   controllers: [],
   providers: [],
