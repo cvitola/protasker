@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UsePipes, Valid
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { Auth } from '../utils/authjwt';  
 
 @Controller('users')
 export class UsersController {
@@ -75,7 +75,16 @@ export class UsersController {
     try {
       const user = await this.usersService.findOneUser(updateUserDto.mail);
       if(user){
-        user.password === updateUserDto.password ? res.status(200).send : res.status(404).json({msg: "Contraseña erronea"});
+        if(user.password !== updateUserDto.password){
+          res.status(401).json({msg: "Contraseña erronea"});
+        } else{
+          console.log("Antes")
+          const accessToken = Auth.generateAccessToken(user.mail);
+          res.header('authorization', accessToken).json({
+            message: 'Usuario autenticado',
+            token: accessToken
+          })
+        }
       }else{
         res.status(404).json({msg: `Usuario: ${updateUserDto.mail} inexistente`});
       }
@@ -90,6 +99,7 @@ export class UsersController {
         return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           message: 'Internal server error',
+          error: error
         });
       }
     }
