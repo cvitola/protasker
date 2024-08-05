@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { join } from 'path';
 
+
 export const Configuration = (configService: ConfigService): TypeOrmModuleOptions => ({
     type: 'postgres',
     host: configService.get('DB_HOST'),
@@ -9,8 +10,9 @@ export const Configuration = (configService: ConfigService): TypeOrmModuleOption
     username: configService.get('DB_USERNAME'),
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_NAME'),
-    entities: [join(process.cwd(), 'dist/**/*.entity.js')],
-    migrations: [join(process.cwd(), 'dist/migrations/*.js')], //migraciones
+    //entities: [join(process.cwd(), 'dist/**/*.entity.js')],
+    entities: [__dirname + '/../**/+.entity{.ts,.js}'],
+    migrations: [__dirname + '/migrations/*{.ts,.js}'],
     // do NOT use synchronize: true in real projects
     synchronize: false,
     ssl :{
